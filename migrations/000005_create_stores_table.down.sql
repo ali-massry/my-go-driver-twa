@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS store_modules;
+DROP TABLE IF EXISTS stores;
