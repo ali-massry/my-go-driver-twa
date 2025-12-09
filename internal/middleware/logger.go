@@ -3,7 +3,8 @@ package middleware
 import (
 	"time"
 
-	"github.com/ali-massry/my-go-driver/pkg/logger"
+	"my-go-driver/pkg/logger"
+
 	"github.com/gin-gonic/gin"
 )
 

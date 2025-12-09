@@ -9,9 +9,10 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/ali-massry/my-go-driver/internal/app"
-	"github.com/ali-massry/my-go-driver/internal/config"
-	"github.com/ali-massry/my-go-driver/internal/router"
+	"my-go-driver/internal/app"
+	"my-go-driver/internal/config"
+	"my-go-driver/internal/router"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -40,9 +41,10 @@ func main() {
 	router.SetupRoutes(
 		r,
 		container.Logger,
-		container.JWTManager,
-		container.UserHandler,
-		container.AuthHandler,
+		cfg.JWT.Secret,
+		container.AdminCompanyHandler,
+		container.AdminDriverHandler,
+		container.AdminModuleHandler,
 	)
 
 	// Create HTTP server
@@ -55,9 +57,13 @@ func main() {
 
 	// Start server in a goroutine
 	go func() {
-		log.Printf("Server starting on port %s in %s mode", cfg.Server.Port, cfg.Server.Environment)
+		container.Logger.Info().
+			Str("port", cfg.Server.Port).
+			Str("environment", cfg.Server.Environment).
+			Msg("Server starting")
+
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("Failed to start server: %v", err)
+			container.Logger.Fatal().Err(err).Msg("Failed to start server")
 		}
 	}()
 
@@ -66,14 +72,14 @@ func main() {
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
 
-	log.Println("Shutting down server...")
+	container.Logger.Info().Msg("Shutting down server...")
 
 	// Graceful shutdown with 5 second timeout
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	if err := srv.Shutdown(ctx); err != nil {
-		log.Fatal("Server forced to shutdown:", err)
+		container.Logger.Fatal().Err(err).Msg("Server forced to shutdown")
 	}
 
 	// Close database connection
@@ -84,5 +90,5 @@ func main() {
 		}
 	}
 
-	log.Println("Server exited")
+	container.Logger.Info().Msg("Server exited")
 }

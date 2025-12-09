@@ -13,3 +13,13 @@ func Check(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
 }
+
+// HashPassword is an alias for Hash
+func HashPassword(password string) (string, error) {
+	return Hash(password)
+}
+
+// CheckPasswordHash is an alias for Check
+func CheckPasswordHash(password, hash string) bool {
+	return Check(password, hash)
+}

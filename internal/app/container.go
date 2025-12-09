@@ -1,24 +1,23 @@
 package app
 
 import (
-	"github.com/ali-massry/my-go-driver/internal/config"
-	"github.com/ali-massry/my-go-driver/internal/domain/user"
-	"github.com/ali-massry/my-go-driver/internal/handler"
-	"github.com/ali-massry/my-go-driver/internal/repository"
-	"github.com/ali-massry/my-go-driver/internal/service"
-	jwtpkg "github.com/ali-massry/my-go-driver/pkg/jwt"
-	"github.com/ali-massry/my-go-driver/pkg/logger"
+	"my-go-driver/internal/config"
+	"my-go-driver/internal/handler"
+	"my-go-driver/internal/repository"
+	"my-go-driver/internal/service"
+	"my-go-driver/pkg/logger"
+
 	"gorm.io/gorm"
 )
 
 // Container holds all application dependencies
 type Container struct {
-	Config      *config.Config
-	DB          *gorm.DB
-	Logger      *logger.Logger
-	JWTManager  *jwtpkg.Manager
-	UserHandler *handler.UserHandler
-	AuthHandler *handler.AuthHandler
+	Config              *config.Config
+	DB                  *gorm.DB
+	Logger              *logger.Logger
+	AdminCompanyHandler *handler.AdminCompanyHandler
+	AdminDriverHandler  *handler.AdminDriverHandler
+	AdminModuleHandler  *handler.AdminModuleHandler
 }
 
 // NewContainer creates a new dependency injection container
@@ -36,37 +35,34 @@ func NewContainer(cfg *config.Config) (*Container, error) {
 		return nil, err
 	}
 
-	// Auto-migrate models
-	// NOTE: In production, use golang-migrate to run migration files in /migrations
-	// For development, we use AutoMigrate for the user table only
-	// All other tables are created via SQL migrations
-	if err := db.AutoMigrate(&user.User{}); err != nil {
-		return nil, err
-	}
-
 	// Log migration info
-	log.Info().Msg("Database migrations ready. Run SQL migrations from /migrations folder for full schema.")
-
-	// Initialize JWT manager
-	jwtManager := jwtpkg.NewManager(cfg.JWT.Secret, cfg.JWT.Expiration)
+	log.Info().Msg("Database migrations ready. All tables created via SQL migrations.")
 
 	// Wire up dependencies using dependency injection
+
 	// Repository layer
-	userRepo := repository.NewUserRepository(db)
+	companyRepo := repository.NewCompanyRepository(db)
+	driverRepo := repository.NewDriverRepository(db)
+	shiftRepo := repository.NewShiftRepository(db)
+	moduleRepo := repository.NewModuleRepository(db)
 
 	// Service layer
-	userService := service.NewUserService(userRepo, jwtManager)
+	companyService := service.NewCompanyService(companyRepo, cfg.JWT.Secret)
+	driverService := service.NewDriverService(driverRepo, shiftRepo)
+	shiftService := service.NewShiftService(shiftRepo)
+	moduleService := service.NewModuleService(moduleRepo)
 
 	// Handler layer
-	userHandler := handler.NewUserHandler(userService)
-	authHandler := handler.NewAuthHandler(userService)
+	adminCompanyHandler := handler.NewAdminCompanyHandler(companyService)
+	adminDriverHandler := handler.NewAdminDriverHandler(driverService, shiftService)
+	adminModuleHandler := handler.NewAdminModuleHandler(moduleService)
 
 	return &Container{
-		Config:      cfg,
-		DB:          db,
-		Logger:      log,
-		JWTManager:  jwtManager,
-		UserHandler: userHandler,
-		AuthHandler: authHandler,
+		Config:              cfg,
+		DB:                  db,
+		Logger:              log,
+		AdminCompanyHandler: adminCompanyHandler,
+		AdminDriverHandler:  adminDriverHandler,
+		AdminModuleHandler:  adminModuleHandler,
 	}, nil
 }

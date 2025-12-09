@@ -1,0 +1,25 @@
+CREATE TABLE IF NOT EXISTS driver_shifts (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    driver_id BIGINT UNSIGNED NOT NULL,
+    company_id BIGINT UNSIGNED NOT NULL,
+    shift_date DATE NOT NULL,
+    start_time TIMESTAMP NULL,
+    end_time TIMESTAMP NULL,
+    status ENUM('scheduled', 'ongoing', 'completed', 'cancelled') DEFAULT 'scheduled',
+    total_orders INT DEFAULT 0,
+    completed_orders INT DEFAULT 0,
+    cancelled_orders INT DEFAULT 0,
+    total_distance DECIMAL(10, 2) DEFAULT 0.00,
+    total_earnings DECIMAL(10, 2) DEFAULT 0.00,
+    rating DECIMAL(3, 2) DEFAULT 0.00,
+    notes TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (driver_id) REFERENCES drivers(id) ON DELETE CASCADE,
+    FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE,
+    INDEX idx_shifts_driver (driver_id),
+    INDEX idx_shifts_company (company_id),
+    INDEX idx_shifts_date (shift_date),
+    INDEX idx_shifts_status (status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

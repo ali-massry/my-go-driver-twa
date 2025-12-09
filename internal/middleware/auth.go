@@ -4,8 +4,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/ali-massry/my-go-driver/pkg/httputil"
-	jwtpkg "github.com/ali-massry/my-go-driver/pkg/jwt"
+	"my-go-driver/pkg/httputil"
+	jwtpkg "my-go-driver/pkg/jwt"
+
 	"github.com/gin-gonic/gin"
 )
 

@@ -73,3 +73,43 @@ func (m *Manager) Validate(tokenString string) (*Claims, error) {
 
 	return claims, nil
 }
+
+// GenerateToken is a helper function to generate a token with just userID
+func GenerateToken(userID uint64, secret string) (string, error) {
+	claims := Claims{
+		UserID: uint(userID),
+		Email:  "",
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+			NotBefore: jwt.NewNumericDate(time.Now()),
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return token.SignedString([]byte(secret))
+}
+
+// ValidateToken is a helper function to validate a token and return userID
+func ValidateToken(tokenString string, secret string) (uint64, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, ErrInvalidToken
+		}
+		return []byte(secret), nil
+	})
+
+	if err != nil {
+		if errors.Is(err, jwt.ErrTokenExpired) {
+			return 0, ErrExpiredToken
+		}
+		return 0, ErrInvalidToken
+	}
+
+	claims, ok := token.Claims.(*Claims)
+	if !ok || !token.Valid {
+		return 0, ErrInvalidToken
+	}
+
+	return uint64(claims.UserID), nil
+}
