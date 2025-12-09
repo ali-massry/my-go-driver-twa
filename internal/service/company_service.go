@@ -38,16 +38,44 @@ func (s *companyService) CreateCompany(ctx context.Context, req company.CreateCo
 
 	// Create company
 	newCompany := &company.Company{
-		Name:     req.Name,
-		Email:    req.Email,
-		Phone:    req.Phone,
-		Address:  req.Address,
-		Timezone: req.Timezone,
-		Status:   company.CompanyStatusActive,
+		Name:              req.Name,
+		LegalName:         req.LegalName,
+		Email:             req.Email,
+		Phone:             req.Phone,
+		WhatsApp:          req.WhatsApp,
+		Address:           req.Address,
+		Country:           req.Country,
+		Timezone:          req.Timezone,
+		Locale:            req.Locale,
+		DateFormat:        req.DateFormat,
+		Currency:          req.Currency,
+		Plan:              req.Plan,
+		BillingCycle:      req.BillingCycle,
+		MaxAllowedDrivers: req.MaxAllowedDrivers,
+		Status:            company.CompanyStatusActive,
 	}
 
-	if req.Timezone == "" {
+	// Set defaults
+	if newCompany.Timezone == "" {
 		newCompany.Timezone = "UTC"
+	}
+	if newCompany.Locale == "" {
+		newCompany.Locale = "en"
+	}
+	if newCompany.DateFormat == "" {
+		newCompany.DateFormat = "dd/mm/yyyy"
+	}
+	if newCompany.Currency == "" {
+		newCompany.Currency = "USD"
+	}
+	if newCompany.Plan == "" {
+		newCompany.Plan = company.PlanFree
+	}
+	if newCompany.BillingCycle == "" {
+		newCompany.BillingCycle = company.CycleMonthly
+	}
+	if newCompany.MaxAllowedDrivers == 0 {
+		newCompany.MaxAllowedDrivers = 10
 	}
 
 	if err := s.repo.Create(ctx, newCompany); err != nil {
@@ -109,17 +137,77 @@ func (s *companyService) UpdateCompany(ctx context.Context, id uint64, req compa
 	if req.Name != "" {
 		c.Name = req.Name
 	}
+	if req.LegalName != "" {
+		c.LegalName = req.LegalName
+	}
 	if req.Email != "" {
 		c.Email = req.Email
 	}
 	if req.Phone != "" {
 		c.Phone = req.Phone
 	}
+	if req.WhatsApp != "" {
+		c.WhatsApp = req.WhatsApp
+	}
 	if req.Address != "" {
 		c.Address = req.Address
 	}
+	if req.Country != "" {
+		c.Country = req.Country
+	}
 	if req.Timezone != "" {
 		c.Timezone = req.Timezone
+	}
+	if req.Locale != "" {
+		c.Locale = req.Locale
+	}
+	if req.DateFormat != "" {
+		c.DateFormat = req.DateFormat
+	}
+	if req.Currency != "" {
+		c.Currency = req.Currency
+	}
+	if req.PODRequired != nil {
+		c.PODRequired = *req.PODRequired
+	}
+	if req.VehicleAssignmentMode != "" {
+		c.VehicleAssignmentMode = req.VehicleAssignmentMode
+	}
+	if req.MaxExtraDeliveryQty != nil {
+		c.MaxExtraDeliveryQty = *req.MaxExtraDeliveryQty
+	}
+	if req.RoutingMode != "" {
+		c.RoutingMode = req.RoutingMode
+	}
+	if req.GPSAccuracy != "" {
+		c.GPSAccuracy = req.GPSAccuracy
+	}
+	if req.HasMultipleStores != nil {
+		c.HasMultipleStores = *req.HasMultipleStores
+	}
+	if req.EnableVehicleStock != nil {
+		c.EnableVehicleStock = *req.EnableVehicleStock
+	}
+	if req.EnableProductCatalog != nil {
+		c.EnableProductCatalog = *req.EnableProductCatalog
+	}
+	if req.BroadcastEnabled != nil {
+		c.BroadcastEnabled = *req.BroadcastEnabled
+	}
+	if req.MaxAllowedDrivers != nil {
+		c.MaxAllowedDrivers = *req.MaxAllowedDrivers
+	}
+	if req.Plan != "" {
+		c.Plan = req.Plan
+	}
+	if req.BillingCycle != "" {
+		c.BillingCycle = req.BillingCycle
+	}
+	if req.SeatsLimit != nil {
+		c.SeatsLimit = *req.SeatsLimit
+	}
+	if req.APIRateLimit != nil {
+		c.APIRateLimit = *req.APIRateLimit
 	}
 
 	if err := s.repo.Update(ctx, c); err != nil {
@@ -239,18 +327,41 @@ func (s *companyService) GetAdminProfile(ctx context.Context, adminID uint64) (*
 // Helper methods
 func (s *companyService) toCompanyResponse(c *company.Company) company.CompanyResponse {
 	return company.CompanyResponse{
-		ID:           c.ID,
-		Name:         c.Name,
-		Email:        c.Email,
-		Phone:        c.Phone,
-		Address:      c.Address,
-		Timezone:     c.Timezone,
-		LogoURL:      c.LogoURL,
-		ColorPalette: c.ColorPalette,
-		FontFamily:   c.FontFamily,
-		Status:       c.Status,
-		CreatedAt:    c.CreatedAt,
-		UpdatedAt:    c.UpdatedAt,
+		ID:                    c.ID,
+		Name:                  c.Name,
+		LegalName:             c.LegalName,
+		Email:                 c.Email,
+		Phone:                 c.Phone,
+		WhatsApp:              c.WhatsApp,
+		Address:               c.Address,
+		Country:               c.Country,
+		LogoURL:               c.LogoURL,
+		ColorPalette:          c.ColorPalette,
+		FontFamily:            c.FontFamily,
+		Theme:                 c.Theme,
+		CustomCSS:             c.CustomCSS,
+		Timezone:              c.Timezone,
+		Locale:                c.Locale,
+		DateFormat:            c.DateFormat,
+		Currency:              c.Currency,
+		PODRequired:           c.PODRequired,
+		VehicleAssignmentMode: c.VehicleAssignmentMode,
+		MaxExtraDeliveryQty:   c.MaxExtraDeliveryQty,
+		RoutingMode:           c.RoutingMode,
+		GPSAccuracy:           c.GPSAccuracy,
+		DepotID:               c.DepotID,
+		HasMultipleStores:     c.HasMultipleStores,
+		EnableVehicleStock:    c.EnableVehicleStock,
+		EnableProductCatalog:  c.EnableProductCatalog,
+		BroadcastEnabled:      c.BroadcastEnabled,
+		MaxAllowedDrivers:     c.MaxAllowedDrivers,
+		Plan:                  c.Plan,
+		BillingCycle:          c.BillingCycle,
+		SeatsLimit:            c.SeatsLimit,
+		APIRateLimit:          c.APIRateLimit,
+		Status:                c.Status,
+		CreatedAt:             c.CreatedAt,
+		UpdatedAt:             c.UpdatedAt,
 	}
 }
 

@@ -1,0 +1,532 @@
+{
+  "info": {
+    "name": "TWA Driver System API v1",
+    "_postman_id": "b6bbccba-3f2e-4d17-bb55-98711dbd67c4",
+    "description": "Admin API collection for Driver System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Admin Auth",
+      "item": [
+        {
+          "name": "Login Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/admin/auth/login",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "admin", "auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Admin Profile (Me)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/admin/auth/me",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "admin", "auth", "me"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "Companies",
+      "item": [
+        {
+          "name": "Create Company",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Company ABC\",\n  \"legal_name\": \"Company ABC LLC\",\n  \"email\": \"info@abc.com\",\n  \"phone\": \"12345678\",\n  \"whatsapp\": \"12345678\",\n  \"address\": \"123 Main St, Beirut\",\n  \"country\": \"Lebanon\",\n  \"timezone\": \"Asia/Beirut\",\n  \"locale\": \"en\",\n  \"date_format\": \"YYYY-MM-DD\",\n  \"currency\": \"USD\",\n  \"plan\": \"free\",\n  \"billing_cycle\": \"monthly\",\n  \"max_allowed_drivers\": 10,\n  \"owner_name\": \"John Doe\",\n  \"owner_email\": \"owner@abc.com\",\n  \"owner_phone\": \"12345678\",\n  \"owner_password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/admin/companies",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "admin", "companies"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Companies",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/admin/companies?page=1&limit=10&status=active&search=",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "admin", "companies"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "status", "value": "active" },
+                { "key": "search", "value": "" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Company",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/admin/companies/:id",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "admin", "companies", ":id"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Company",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Name\",\n  \"legal_name\": \"Updated Legal Name LLC\",\n  \"email\": \"updated@mail.com\",\n  \"phone\": \"87654321\",\n  \"whatsapp\": \"87654321\",\n  \"address\": \"456 New St, Beirut\",\n  \"country\": \"Lebanon\",\n  \"timezone\": \"Asia/Beirut\",\n  \"locale\": \"ar\",\n  \"date_format\": \"DD/MM/YYYY\",\n  \"currency\": \"LBP\",\n  \"pod_required\": true,\n  \"vehicle_assignment_mode\": \"auto\",\n  \"max_extra_delivery_qty\": 5,\n  \"routing_mode\": \"optimized\",\n  \"gps_accuracy\": \"high\",\n  \"has_multiple_stores\": true,\n  \"enable_vehicle_stock\": true,\n  \"enable_product_catalog\": true,\n  \"broadcast_enabled\": true,\n  \"max_allowed_drivers\": 20,\n  \"plan\": \"pro\",\n  \"billing_cycle\": \"yearly\",\n  \"seats_limit\": 15,\n  \"api_rate_limit\": 1000\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/admin/companies/:id",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "admin", "companies", ":id"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Company",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/admin/companies/:id",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "admin", "companies", ":id"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Branding",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"logo_url\": \"https://image.com/logo.png\",\n  \"color_palette\": {\n    \"primary\": \"#004567\",\n    \"secondary\": \"#FF5733\",\n    \"accent\": \"#FFC300\"\n  },\n  \"font_family\": \"Roboto\",\n  \"theme\": \"light\",\n  \"custom_css\": \".custom { color: red; }\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/admin/companies/:id/branding",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "admin", "companies", ":id", "branding"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Suspend Company",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/admin/companies/:id/suspend",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "admin", "companies", ":id", "suspend"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Activate Company",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/admin/companies/:id/activate",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "admin", "companies", ":id", "activate"]
+            }
+          },
+          "response": []
+        },
+
+        {
+          "name": "Assign Module to Company",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"module_id\": 1,\n  \"is_enabled\": true,\n  \"config\": {}\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/admin/companies/:id/modules",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "admin", "companies", ":id", "modules"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Company Modules",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/admin/companies/:id/modules",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "admin", "companies", ":id", "modules"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Module from Company",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/admin/companies/:id/modules/:module_id",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "admin", "companies", ":id", "modules", ":module_id"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "Drivers",
+      "item": [
+        {
+          "name": "Create Driver",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"company_id\": 1,\n  \"store_id\": null,\n  \"full_name\": \"Driver Name\",\n  \"phone\": \"78945612\",\n  \"email\": \"driver@mail.com\",\n  \"password\": \"password123\",\n  \"profile_photo\": \"https://example.com/photo.jpg\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/admin/drivers",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "admin", "drivers"]
+            }
+          },
+          "response": []
+        },
+
+        {
+          "name": "List Drivers",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/admin/drivers?page=1&limit=10&company_id=&store_id=&status=active&online_status=online&search=",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "admin", "drivers"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "company_id", "value": "" },
+                { "key": "store_id", "value": "" },
+                { "key": "status", "value": "active" },
+                { "key": "online_status", "value": "online" },
+                { "key": "search", "value": "" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Driver",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/admin/drivers/:id",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "admin", "drivers", ":id"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Driver",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Updated Driver Name\",\n  \"phone\": \"12345678\",\n  \"email\": \"updated_driver@mail.com\",\n  \"store_id\": 1,\n  \"profile_photo\": \"https://example.com/new_photo.jpg\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/admin/drivers/:id",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "admin", "drivers", ":id"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Driver",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/admin/drivers/:id",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "admin", "drivers", ":id"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Assign Driver to Company",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"company_id\": 2,\n  \"store_id\": 1\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/admin/drivers/:id/assign-company",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "admin", "drivers", ":id", "assign-company"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Block Driver",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/admin/drivers/:id/block",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "admin", "drivers", ":id", "block"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Unblock Driver",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/admin/drivers/:id/unblock",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "admin", "drivers", ":id", "unblock"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Driver Performance",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/admin/drivers/:id/performance",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "admin", "drivers", ":id", "performance"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Driver Shifts",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/admin/drivers/:id/shifts?page=1&limit=10&status=&start_date=&end_date=",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "admin", "drivers", ":id", "shifts"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "status", "value": "" },
+                { "key": "start_date", "value": "" },
+                { "key": "end_date", "value": "" }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "Modules",
+      "item": [
+        {
+          "name": "List All Modules",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/admin/modules?page=1&limit=10",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "admin", "modules"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
