@@ -143,10 +143,10 @@ type Company struct {
 	// Basic Company Info
 	ID        uint64 `json:"id" gorm:"primaryKey"`
 	Name      string `json:"name" gorm:"not null"`
-	LegalName string `json:"legal_name"`
+	LegalName string `json:"legal_name" gorm:"column:legal_name"`
 	Email     string `json:"email"`
 	Phone     string `json:"phone"`
-	WhatsApp  string `json:"whatsapp"`
+	WhatsApp  string `json:"whatsapp" gorm:"column:whatsapp"`
 	Address   string `json:"address"`
 	Country   string `json:"country"`
 
@@ -216,9 +216,10 @@ type CompanyAdmin struct {
 	Phone        string    `json:"phone"`
 	PasswordHash string    `json:"-" gorm:"not null"`
 	Role         AdminRole `json:"role" gorm:"type:enum('owner','manager');default:manager"`
-	IsActive     bool      `json:"is_active" gorm:"default:true"`
-	CreatedAt    time.Time `json:"created_at"`
-	UpdatedAt    time.Time `json:"updated_at"`
+	IsActive     bool       `json:"is_active" gorm:"default:true"`
+	CreatedAt    time.Time  `json:"created_at"`
+	UpdatedAt    time.Time  `json:"updated_at"`
+	DeletedAt    *time.Time `json:"deleted_at,omitempty" gorm:"index"`
 
 	// Relations
 	Company *Company `json:"company,omitempty" gorm:"foreignKey:CompanyID"`

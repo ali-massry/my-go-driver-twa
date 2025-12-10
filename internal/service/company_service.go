@@ -280,6 +280,50 @@ func (s *companyService) ActivateCompany(ctx context.Context, id uint64) error {
 	return s.repo.UpdateStatus(ctx, id, company.CompanyStatusActive)
 }
 
+func (s *companyService) CreateAdmin(ctx context.Context, req company.CreateAdminRequest) (*company.CompanyAdminResponse, error) {
+	// Check if company exists
+	_, err := s.repo.GetByID(ctx, req.CompanyID)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("company not found")
+		}
+		return nil, err
+	}
+
+	// Check if admin email already exists
+	existingAdmin, err := s.repo.GetAdminByEmail(ctx, req.Email)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, fmt.Errorf("error checking admin email: %w", err)
+	}
+	if existingAdmin != nil {
+		return nil, fmt.Errorf("admin email already exists")
+	}
+
+	// Hash password
+	hashedPassword, err := hash.HashPassword(req.Password)
+	if err != nil {
+		return nil, fmt.Errorf("failed to hash password: %w", err)
+	}
+
+	// Create admin
+	admin := &company.CompanyAdmin{
+		CompanyID:    req.CompanyID,
+		FullName:     req.FullName,
+		Email:        req.Email,
+		Phone:        req.Phone,
+		PasswordHash: hashedPassword,
+		Role:         req.Role,
+		IsActive:     true,
+	}
+
+	if err := s.repo.CreateAdmin(ctx, admin); err != nil {
+		return nil, fmt.Errorf("failed to create admin: %w", err)
+	}
+
+	response := s.toAdminResponse(admin)
+	return &response, nil
+}
+
 func (s *companyService) LoginAdmin(ctx context.Context, req company.LoginRequest) (*company.LoginResponse, error) {
 	admin, err := s.repo.GetAdminByEmail(ctx, req.Email)
 	if err != nil {

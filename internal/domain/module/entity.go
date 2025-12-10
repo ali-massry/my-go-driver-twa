@@ -53,6 +53,7 @@ type CompanyModule struct {
 	Config    ModuleConfig `json:"config" gorm:"type:json"`
 	CreatedAt time.Time    `json:"created_at"`
 	UpdatedAt time.Time    `json:"updated_at"`
+	DeletedAt *time.Time   `json:"deleted_at,omitempty" gorm:"index"`
 
 	// Relations
 	Module *ModuleMaster `json:"module,omitempty" gorm:"foreignKey:ModuleID"`

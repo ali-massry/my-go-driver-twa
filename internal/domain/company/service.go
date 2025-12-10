@@ -15,6 +15,7 @@ type Service interface {
 	ActivateCompany(ctx context.Context, id uint64) error
 
 	// Company Admin operations
+	CreateAdmin(ctx context.Context, req CreateAdminRequest) (*CompanyAdminResponse, error)
 	LoginAdmin(ctx context.Context, req LoginRequest) (*LoginResponse, error)
 	GetAdminProfile(ctx context.Context, adminID uint64) (*CompanyAdminResponse, error)
 }

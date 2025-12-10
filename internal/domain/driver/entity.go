@@ -32,6 +32,7 @@ type Driver struct {
 	ProfilePhoto string       `json:"profile_photo"`
 	CreatedAt    time.Time    `json:"created_at"`
 	UpdatedAt    time.Time    `json:"updated_at"`
+	DeletedAt    *time.Time   `json:"deleted_at,omitempty" gorm:"index"`
 }
 
 func (Driver) TableName() string {

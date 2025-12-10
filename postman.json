@@ -52,6 +52,34 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Create Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"company_id\": 1,\n  \"full_name\": \"Jane Manager\",\n  \"email\": \"manager@example.com\",\n  \"phone\": \"87654321\",\n  \"password\": \"password123\",\n  \"role\": \"manager\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/admin/admins",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "admin", "admins"]
+            }
+          },
+          "response": []
         }
       ]
     },

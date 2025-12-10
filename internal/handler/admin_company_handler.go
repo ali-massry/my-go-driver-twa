@@ -218,6 +218,30 @@ func (h *AdminCompanyHandler) ActivateCompany(c *gin.Context) {
 	httputil.RespondSuccess(c, http.StatusOK, "Company activated successfully", nil)
 }
 
+// CreateAdmin creates a new company admin
+// @Summary Create company admin
+// @Tags Admin - Auth
+// @Accept json
+// @Produce json
+// @Param request body company.CreateAdminRequest true "Admin creation request"
+// @Success 201 {object} company.CompanyAdminResponse
+// @Router /api/v1/admin/admins [post]
+func (h *AdminCompanyHandler) CreateAdmin(c *gin.Context) {
+	var req company.CreateAdminRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		httputil.RespondError(c, http.StatusBadRequest, "Invalid request payload", err.Error())
+		return
+	}
+
+	result, err := h.companyService.CreateAdmin(c.Request.Context(), req)
+	if err != nil {
+		httputil.RespondError(c, http.StatusInternalServerError, "Failed to create admin", err.Error())
+		return
+	}
+
+	httputil.RespondSuccess(c, http.StatusCreated, "Admin created successfully", result)
+}
+
 // LoginAdmin handles company admin login
 // @Summary Company admin login
 // @Tags Admin - Auth

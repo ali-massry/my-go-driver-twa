@@ -53,6 +53,9 @@ func SetupRoutes(
 				// Admin profile
 				protected.GET("/auth/me", adminCompanyHandler.GetAdminProfile)
 
+				// Admin management
+				protected.POST("/admins", adminCompanyHandler.CreateAdmin)
+
 				// Company management
 				companies := protected.Group("/companies")
 				{

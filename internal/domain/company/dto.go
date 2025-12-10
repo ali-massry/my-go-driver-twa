@@ -185,6 +185,16 @@ type PaginatedCompaniesResponse struct {
 	TotalPages int               `json:"total_pages"`
 }
 
+// CreateAdminRequest represents request to create a new admin
+type CreateAdminRequest struct {
+	CompanyID uint64    `json:"company_id" binding:"required"`
+	FullName  string    `json:"full_name" binding:"required,min=2,max=255"`
+	Email     string    `json:"email" binding:"required,email"`
+	Phone     string    `json:"phone" binding:"omitempty,max=50"`
+	Password  string    `json:"password" binding:"required,min=8"`
+	Role      AdminRole `json:"role" binding:"required,oneof=owner manager"`
+}
+
 // LoginRequest represents company admin login request
 type LoginRequest struct {
 	Email    string `json:"email" binding:"required,email"`
